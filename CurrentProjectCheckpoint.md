@@ -41,6 +41,9 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
   EnergyPlus 26.1.0 is installed at `/usr/local/bin/energyplus`; Honeybee has
   not yet been run against it end to end.
 
+- **2026-10-29:** switched to a pull-request workflow: all changes go on a
+  branch and into `main` by PR (AGENTS.md §1a).
+
 ## Next steps
 
 1. ~~Create the conda env and pass the import check~~ (done 2026-10-29).
