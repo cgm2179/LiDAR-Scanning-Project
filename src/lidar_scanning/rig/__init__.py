@@ -1,6 +1,8 @@
 """Scanning station code that runs on the Raspberry Pi.
 
-Planned modules: STL-27L serial driver (UART, CRC check), stepper control,
-fisheye camera capture, one-button scan cycle that exports E57.
+    stl27l.py   STL-27L/LD06 packet parser + chunked serial reader (CRC, loss counting)
+    scan.py     stop-and-scan sweep: one LiDAR revolution per stepper angle -> plane files
+
+Still to come: stepper control, fisheye camera capture, one-button scan cycle.
 Starting point is PiDAR (https://github.com/VoxoTech/PiDAR); see third_party/.
 """

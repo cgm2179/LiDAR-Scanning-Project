@@ -11,7 +11,7 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
 | Phase | What | Status |
 |---|---|---|
 | P0 | Plan, read PiDAR + STL-27L manual, Python/Open3D setup, order parts | Mostly done (see below) |
-| P1 | Build the rig; one-button scan → E57 | Not started — waiting on parts |
+| P1 | Build the rig; one-button scan → E57 | LiDAR reader written (synthetic tests); rest waiting on parts |
 | P2 | Calibration + acceptance tests | Test code written and checked on synthetic data; needs real scans |
 | P3 | Capture the house (~19–25 stations) | Capture + stitching code written, checked on synthetic captures; needs rig |
 | P4 | Point cloud → geometry JSON (core of the project) | Not started |
@@ -80,6 +80,15 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
     warnings now flag this. Sketch poses look necessary: `TBD (Cameron)`.
   - Reviewed two pasted snippets (camera-overlay demo, C++ STL-27L driver);
     neither used; the driver's problems are listed under Open questions.
+- **2026-10-29:** corrected STL-27L reader (branch `feature/stl27l-reader`,
+  stacked on the P3 branch): `rig/stl27l.py` (chunked reads, persistent buffer,
+  CRC8 on every packet, angle interpolation start→end, counts of CRC errors /
+  skipped bytes / dropped packets), `rig/scan.py` (stop-and-scan: one full
+  revolution per stepper angle, writes PiDAR-format plane files +
+  `capture_log.json`), `scripts/lidar_packet_test.py` (the packet-loss test).
+  Tested on a real LD06 packet from PiDAR's source and a fake sensor whose
+  output goes through P3 assembly onto the true walls (99 % within 5 mm).
+  Decoding 10 s of STL-27L data takes 0.016 s on the Mac.
 
 ## Next steps
 
@@ -123,10 +132,12 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
 
 ## Open questions
 
-- Pi LiDAR reader: measure packet loss with PiDAR's byte-by-byte reader at
-  921600 baud once the rig runs. A pasted C++ driver (2026-10-29) is not usable
-  as is: 2° per-point angle step instead of interpolating to the end angle, no
-  CRC check, packets split across reads are dropped, serial port not in raw mode.
+- Pi LiDAR reader: run `python scripts/lidar_packet_test.py --seconds 20` and
+  again with `--bytewise` (PiDAR's way) on the Pi. If the chunked reader keeps
+  up (no dropped packets, ~21,600 points/s), no C++ is needed. A pasted C++
+  driver (2026-10-29) was not used: 2° per-point angle step instead of
+  interpolating to the end angle, no CRC check, packets split across reads are
+  dropped, serial port not in raw mode.
 
 ## Open questions (from 2026-10-15 meeting)
 
