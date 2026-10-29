@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Scan data (large; keep out of git, back up elsewhere)
+data/raw/*
+data/registered/*
+data/processed/*
+!data/**/.gitkeep
+*.e57
+*.las
+*.laz
+*.pcd
+*.ply
+*.npy
+
+# EnergyPlus output
+eplusout.*
+eplustbl.*
+*.err
+*.eso
+*.mtr
+*.sql
+energyplus_runs/
+
+# Upstream clone
+third_party/PiDAR/
+
+# Local config and OS/Office files
+config/pipeline.yaml
+.claude/settings.local.json
+.DS_Store
+~$*

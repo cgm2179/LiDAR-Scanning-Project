@@ -1,0 +1,14 @@
+# Scanning station (Raspberry Pi). Install on the Pi only.
+# picamera2 and Hugin come from apt, not pip:
+#   sudo apt install -y python3-picamera2 hugin-tools
+numpy>=1.20.1
+pyserial>=3.5             # STL-27L UART
+rpi-hardware-pwm>=2.0.0   # lidar motor PWM
+RPi.GPIO                  # on a Pi 5 use rpi-lgpio instead (drop-in replacement)
+gpiozero                  # scan button, stepper driver pins
+smbus2                    # I2C (remapped i2c-gpio bus)
+open3d>=0.18              # PCD/PLY/E57 export on the Pi
+pye57
+exifread
+# Thermal extension (Section 9), only if you build it:
+# adafruit-circuitpython-mlx90640

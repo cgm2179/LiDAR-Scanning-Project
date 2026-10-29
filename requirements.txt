@@ -1,0 +1,14 @@
+# Processing pipeline (laptop/PC): registration, geometry, EnergyPlus, validation.
+# Use Python 3.11 (Open3D does not ship wheels for the newest Python releases).
+numpy>=1.24
+scipy>=1.10
+open3d>=0.18          # point clouds, RANSAC planes, ICP, visualisation
+pye57>=0.4            # read/write E57 scans
+shapely>=2.0          # room polygons, offsets, intersections
+matplotlib>=3.7
+opencv-python>=4.8    # panoramas, image-based opening checks
+exifread>=3.0         # camera EXIF (exposure) as in PiDAR
+pandas>=2.0           # calibration/validation tables
+jsonschema>=4.0       # validate the building geometry JSON
+honeybee-energy       # Honeybee Rooms -> IDF (Ladybug Tools)
+pytest>=7.0

@@ -1,0 +1,17 @@
+# Example pipeline settings. Copy to pipeline.yaml and tune.
+# Values left as null are open decisions (see docs/decision_log.md).
+ransac:
+  distance_threshold_m: null
+  ransac_n: 3
+  num_iterations: 1000
+registration:
+  voxel_size_m: null
+  icp_max_correspondence_m: null
+acceptance:            # brief P2 pass lines
+  range_bias_residual_mm: 5
+  plane_rms_mm: 10
+  straightness_mm: 15
+  repeatability_sigma_mm: 10
+  icp_fitness_min: 0.8
+  icp_rmse_mm: 20
+  room_accuracy_pct: 2

@@ -1,0 +1,18 @@
+#!/bin/sh
+# Blocks any commit that would credit an AI tool as author or co-author.
+# Enable once per clone:  git config core.hooksPath .githooks
+
+msg_file="$1"
+pattern='co-authored-by:.*(claude|anthropic)|noreply@anthropic\.com|generated with \[?claude'
+
+if grep -Eiq "$pattern" "$msg_file"; then
+  echo "commit-msg hook: remove the Claude/Anthropic attribution line from the commit message." >&2
+  exit 1
+fi
+
+author=$(git var GIT_AUTHOR_IDENT)
+committer=$(git var GIT_COMMITTER_IDENT)
+if printf '%s\n%s\n' "$author" "$committer" | grep -Eiq 'claude|anthropic'; then
+  echo "commit-msg hook: author/committer must be the repo owner, not '$author'." >&2
+  exit 1
+fi
