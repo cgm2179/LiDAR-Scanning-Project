@@ -50,8 +50,26 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
    scans; its tests use Open3D's DemoICPPointClouds (3 overlapping indoor RGB-D
    fragments, ~140–200k points each, not gravity-aligned, not lidar data).
    `python scripts/load_sample_clouds.py` downloads them to `data/sample/` and
-   shows them. Next with this data: try PiDAR's registration settings
-   (`third_party/PiDAR/registration_test.py`, `lib/registration.py`).
+   shows them.
+   **Registration tried 2026-10-29** (`scripts/try_registration.py`, PiDAR
+   settings: 50 mm voxel, FPFH, RANSAC, point-to-plane ICP at 20 mm). Same
+   result for seeds 0–2:
+
+   | pair | ICP fitness | ICP RMSE | P2 pass (>0.8, <20 mm) |
+   |---|---|---|---|
+   | 1→0 | 0.936 | 6.4 mm | yes |
+   | 2→1 | 0.540 | 7.6 mm | no |
+   | 2→0 | 0.771 | 6.8 mm | no |
+
+   Loop closure (2→1→0 vs 2→0): 0.33° and 19.8 mm. All pairs visibly align.
+   Findings for the P2 test design (`TBD (Cameron)` how to act on them):
+   - ICP fitness measures overlap as much as alignment quality; the pairs that
+     "fail" overlap less. Station overlap decides whether >0.8 is reachable.
+   - ICP RMSE only counts points within the ICP threshold, so with a 20 mm
+     threshold it can never exceed 20 mm; the RMSE pass line is automatic.
+   - Loop closure (or taped references) is a better accuracy check; ~20 mm
+     here on one room already approaches the 25 mm project tolerance.
+   - The dataset's `init.log` is an initial guess, not ground truth.
 3. Parts order status: `TBD (Cameron)` — ordered? LiDAR lead time / US supplier?
 4. Start `fileio/` (read PCD/PLY/E57) and a first `geometry/` RANSAC plane
    segmentation notebook on a sample cloud.
