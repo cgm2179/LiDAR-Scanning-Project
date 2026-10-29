@@ -19,6 +19,7 @@ PC = [
     ("exifread", "exifread"),
     ("pandas", "pandas"),
     ("jsonschema", "jsonschema"),
+    ("pyyaml", "yaml"),
     ("honeybee-energy", "honeybee_energy"),
     ("lidar-scanning", "lidar_scanning"),
 ]

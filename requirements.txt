@@ -10,5 +10,6 @@ opencv-python>=4.8    # panoramas, image-based opening checks
 exifread>=3.0         # camera EXIF (exposure) as in PiDAR
 pandas>=2.0           # calibration/validation tables
 jsonschema>=4.0       # validate the building geometry JSON
+pyyaml>=6.0           # config and calibration session files
 honeybee-energy       # Honeybee Rooms -> IDF (Ladybug Tools)
 pytest>=7.0

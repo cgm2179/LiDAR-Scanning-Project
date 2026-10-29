@@ -1,0 +1,48 @@
+# P2 calibration session. Copy to e.g. data/raw/calib_2026-11-xx/session.yaml,
+# fill in, then run:  python scripts/run_calibration.py <session.yaml>
+#
+# Paths are relative to the repo root. Boxes crop one wall out of a scan:
+# {min: [x, y, z], max: [x, y, z]} in metres, in the scan's own frame
+# (open the scan in CloudCompare or Open3D to read the coordinates).
+# A box of null uses the whole file (e.g. a scan already cropped to one wall).
+# Any test whose inputs are still null is skipped and listed in the report.
+
+session:
+  date: null          # YYYY-MM-DD
+  room: null          # which taped room — TBD (Cameron)
+  rig: null           # build notes: Pi model, gearing, firmware/PiDAR commit
+  operator: null
+
+range_bias:
+  model: offset       # offset | linear — TBD (Cameron)
+  walls:              # Disto from the rig's rotation axis, perpendicular to the wall
+    - {scan: null, box: null, disto_m: null}   # ~2 m
+    - {scan: null, box: null, disto_m: null}   # ~5 m
+    - {scan: null, box: null, disto_m: null}   # ~8 m
+
+plane_flatness:
+  scan: null
+  box: null
+  trim_threshold_m: null   # e.g. 0.03 to drop clutter; null = use every point
+
+straightness:
+  scan: null          # a ~5 m flat wall
+  box: null
+  bin_m: 0.1
+
+repeatability:        # five scans, same station, rig not moved
+  scans: [null, null, null, null, null]
+  wall_a_box: null    # two opposite walls; their separation is the room dimension
+  wall_b_box: null
+
+registration:         # two stations, adjacent rooms, door open
+  source: null
+  target: null
+  voxel_m: 0.05
+  icp_threshold_m: null    # null = voxel * 0.4 (PiDAR default)
+
+room_accuracy:
+  scan: null
+  dimensions:
+    - {name: length, wall_a_box: null, wall_b_box: null, tape_m: null}
+    - {name: width,  wall_a_box: null, wall_b_box: null, tape_m: null}
