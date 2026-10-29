@@ -45,3 +45,25 @@ def register_pair(source, target, voxel=0.05, icp_threshold=None, max_iteration=
     icp = reg.registration_icp(source, target, icp_threshold, ransac.transformation,
                                reg.TransformationEstimationPointToPlane())
     return ransac, icp, time.time() - start
+
+
+def refine_pair(source, target, init, voxel=0.05, icp_threshold=None):
+    """Coarse-to-fine point-to-plane ICP from an initial guess, e.g. sketched station positions.
+
+    Use instead of register_pair when global feature matching is unreliable
+    (repetitive or featureless rooms). Returns the final full-resolution ICP result.
+    """
+    icp_threshold = icp_threshold or voxel * 0.4
+    for pcd in (source, target):
+        if not pcd.has_normals():
+            pcd.estimate_normals(o3d.geometry.KDTreeSearchParamHybrid(radius=voxel, max_nn=30))
+
+    transformation = init
+    for size in (voxel * 4, voxel * 2, voxel):
+        src = source.voxel_down_sample(size)
+        tgt = target.voxel_down_sample(size)
+        tgt.estimate_normals(o3d.geometry.KDTreeSearchParamHybrid(radius=size * 2, max_nn=30))
+        transformation = reg.registration_icp(src, tgt, size * 2, transformation,
+                                              reg.TransformationEstimationPointToPlane()).transformation
+    return reg.registration_icp(source, target, icp_threshold, transformation,
+                                reg.TransformationEstimationPointToPlane())
