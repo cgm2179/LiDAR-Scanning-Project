@@ -35,11 +35,16 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
 - **2026-10-29:** created this repo: package layout per phase, requirements for
   laptop and Pi, `scripts/check_environment.py`, regression-test stub, decision
   log, agent hand-off files, no-AI-attribution commit hook.
+- **2026-10-29:** created conda env `lidar` (Python 3.11.18) on Cameron's Mac;
+  every import in `check_environment.py` passes (Open3D 0.20.0, honeybee-energy
+  1.127.2). Open3D RANSAC and a Honeybee box room both ran in a smoke test.
+  EnergyPlus 26.1.0 is installed at `/usr/local/bin/energyplus`; Honeybee has
+  not yet been run against it end to end.
 
 ## Next steps
 
-1. Create the conda env (`conda env create -f environment.yml`) and run
-   `python scripts/check_environment.py` until everything says `ok`.
+1. ~~Create the conda env and pass the import check~~ (done 2026-10-29).
+   Use `conda activate lidar` for all laptop work.
 2. Clone PiDAR into `third_party/PiDAR` and load its sample point clouds in
    Open3D (P0 exit item; lets P4 work start before the lidar arrives).
 3. Parts order status: `TBD (Cameron)` — ordered? LiDAR lead time / US supplier?

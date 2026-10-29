@@ -5,6 +5,7 @@ Pass --pi on the Raspberry Pi to also check the rig libraries.
 """
 
 import importlib
+import importlib.metadata
 import sys
 
 PC = [
@@ -19,7 +20,7 @@ PC = [
     ("pandas", "pandas"),
     ("jsonschema", "jsonschema"),
     ("honeybee-energy", "honeybee_energy"),
-    ("lidar-scanning (this repo)", "lidar_scanning"),
+    ("lidar-scanning", "lidar_scanning"),
 ]
 
 PI = [
@@ -36,8 +37,12 @@ def check(packages):
     missing = []
     for label, module in packages:
         try:
-            mod = importlib.import_module(module)
-            print(f"  ok       {label:28s} {getattr(mod, '__version__', '')}")
+            importlib.import_module(module)
+            try:
+                version = importlib.metadata.version(label)
+            except importlib.metadata.PackageNotFoundError:
+                version = ""  # e.g. picamera2 installed by apt
+            print(f"  ok       {label:28s} {version}")
         except Exception as exc:
             print(f"  MISSING  {label:28s} {type(exc).__name__}: {exc}")
             missing.append(label)
