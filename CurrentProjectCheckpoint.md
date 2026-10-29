@@ -45,8 +45,13 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
 
 1. ~~Create the conda env and pass the import check~~ (done 2026-10-29).
    Use `conda activate lidar` for all laptop work.
-2. Clone PiDAR into `third_party/PiDAR` and load its sample point clouds in
-   Open3D (P0 exit item; lets P4 work start before the lidar arrives).
+2. ~~Clone PiDAR and load its sample point clouds~~ (done 2026-10-29).
+   PiDAR (commit `2c7e6af`, 2024-03-12) is in `third_party/PiDAR`. It ships no
+   scans; its tests use Open3D's DemoICPPointClouds (3 overlapping indoor RGB-D
+   fragments, ~140–200k points each, not gravity-aligned, not lidar data).
+   `python scripts/load_sample_clouds.py` downloads them to `data/sample/` and
+   shows them. Next with this data: try PiDAR's registration settings
+   (`third_party/PiDAR/registration_test.py`, `lib/registration.py`).
 3. Parts order status: `TBD (Cameron)` — ordered? LiDAR lead time / US supplier?
 4. Start `fileio/` (read PCD/PLY/E57) and a first `geometry/` RANSAC plane
    segmentation notebook on a sample cloud.
