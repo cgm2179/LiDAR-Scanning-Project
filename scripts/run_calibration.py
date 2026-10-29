@@ -1,9 +1,10 @@
 """Run the P2 acceptance tests for one calibration session and write the report.
 
-    python scripts/run_calibration.py path/to/session.yaml
-    python scripts/run_calibration.py path/to/session.yaml --out data/processed/calibration/report.md
+    python scripts/run_calibration.py phases/phase2_calibration/sessions/2026-11-05.yaml
+    python scripts/run_calibration.py <session.yaml> --out somewhere/report.md
 
-Session format: config/calibration_session.example.yaml. Pass lines come from
+The report goes to phases/phase2_calibration/reports/<session date>_report.md
+unless --out is given. Session format: phases/phase2_calibration/session_template.yaml. Pass lines come from
 the `acceptance` section of config/pipeline.yaml (or pipeline.example.yaml).
 """
 
@@ -18,6 +19,7 @@ from lidar_scanning.fileio.pointcloud import read_points
 from lidar_scanning.geometry.planes import crop_box
 
 ROOT = Path(__file__).resolve().parents[1]
+REPORTS = ROOT / "phases" / "phase2_calibration" / "reports"
 _cache = {}
 
 
@@ -129,7 +131,7 @@ def run(session, limits):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("session", help="session YAML")
-    parser.add_argument("--out", default="data/processed/calibration/report.md")
+    parser.add_argument("--out", help="report path (default: phase 2 reports folder, named by session date)")
     args = parser.parse_args()
 
     session = yaml.safe_load(Path(args.session).read_text())
@@ -138,7 +140,8 @@ if __name__ == "__main__":
 
     meta = dict(session.get("session") or {})
     meta["pass lines from"] = limits_source
-    out = write_report(results, ROOT / args.out, meta=meta, skipped=skipped)
+    out = ROOT / args.out if args.out else REPORTS / f"{meta.get('date') or 'undated'}_report.md"
+    out = write_report(results, out, meta=meta, skipped=skipped)
 
     for r in results:
         print(f"{'PASS' if r.passed else 'FAIL'}  {r.test:15s} {r.value:.3f} {r.unit} (line {r.limit})")

@@ -61,6 +61,7 @@ The pipeline and validation are the intellectual core.
 | `src/lidar_scanning/validation/` | P6 validation | laptop |
 | `src/lidar_scanning/thermal/` | extension, deferred until P5 is done | both |
 | `src/lidar_scanning/fileio/` | shared I/O | both |
+| `phases/phaseN_<name>/` | per-phase README, procedures, session files, reports (no code) | — |
 | `scripts/` | command-line entry points | both |
 | `tests/` | pytest, incl. whole-pipeline regression test | laptop |
 | `data/` | scans and outputs, **never committed** | — |

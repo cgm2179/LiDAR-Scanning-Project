@@ -1,5 +1,6 @@
-# P2 calibration session. Copy to e.g. data/raw/calib_2026-11-xx/session.yaml,
-# fill in, then run:  python scripts/run_calibration.py <session.yaml>
+# P2 calibration session. Copy to phases/phase2_calibration/sessions/YYYY-MM-DD.yaml,
+# fill in, then run:  python scripts/run_calibration.py <that file>
+# Put the scans in data/raw/calibration/YYYY-MM-DD/ (see procedure.md).
 #
 # Paths are relative to the repo root. Boxes crop one wall out of a scan:
 # {min: [x, y, z], max: [x, y, z]} in metres, in the scan's own frame

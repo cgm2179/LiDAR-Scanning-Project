@@ -48,7 +48,10 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
     flatness, straightness, repeatability, registration, room accuracy), each
     returning value, pass line and residuals.
   - `calibration/report.py`: Markdown calibration report.
-  - `scripts/run_calibration.py` + `config/calibration_session.example.yaml`:
+  - `phases/phase2_calibration/`: Phase 2 home: README (pass lines, open
+    decisions), `procedure.md` test-day checklist, `session_template.yaml`,
+    `sessions/` and `reports/`.
+  - `scripts/run_calibration.py` + `session_template.yaml`:
     fill in scan paths, crop boxes and Disto/tape readings, get the report.
   - Shared pieces: `geometry/planes.py` (plane fit, RANSAC trim, crop box,
     wall separation), `fileio/pointcloud.py` (PLY/PCD/E57/NPY),
@@ -97,8 +100,9 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
    can stop being skipped.
 6. Start the calibration room plan for P2 (which room, taped dimensions, Disto
    availability — the BOM currently has no Disto). When the rig scans, copy
-   `config/calibration_session.example.yaml`, fill it in, and run
-   `python scripts/run_calibration.py <session.yaml>`.
+   `phases/phase2_calibration/session_template.yaml` into `sessions/`, fill it
+   in, and run `python scripts/run_calibration.py <session.yaml>`
+   (checklist: `phases/phase2_calibration/procedure.md`).
 
 ## Open questions (from 2026-10-15 meeting)
 
