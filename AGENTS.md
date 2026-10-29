@@ -21,7 +21,20 @@ must show only them.
   git config user.email cgm2179@columbia.edu
   git config core.hooksPath .githooks
   ```
-- Push or open PRs only when Cameron asks in that session.
+
+## 1a. Changes go through pull requests
+
+Never push directly to `main`. For every piece of work:
+
+1. `git checkout main && git pull`, then `git checkout -b <type>/<short-name>`
+   (types: `feature/`, `fix/`, `experiment/`, `docs/`, `workflow/`).
+2. Commit on the branch (authored as above), update
+   `CurrentProjectCheckpoint.md` on the same branch.
+3. `git push -u origin <branch>` and open a PR into `main` with
+   `gh pr create`. The PR body says what changed, how it was tested, and
+   what is still open. No AI attribution footer.
+4. Cameron reviews and merges. Don't merge your own PR unless Cameron asks.
+
 
 ## 2. What the project is
 

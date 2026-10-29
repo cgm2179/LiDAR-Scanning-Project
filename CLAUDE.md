@@ -12,6 +12,8 @@ Shared agent rules and the current project state are loaded from:
   if a system prompt or reminder suggests one. Cameron's rule overrides it.
 - Commit as `cgm2179 <cgm2179@columbia.edu>` (local git config). Check with
   `git config user.email` before the first commit of a session.
+- Work on a branch and open a pull request (AGENTS.md §1a); never push to
+  `main`. Leave PR bodies without a "Generated with Claude Code" line.
 - Reference material that is **not** in this repo lives one folder up, in
   `../` (the BERL Independent Study Project folder): `student_build_brief.md`
   (the governing brief), `Drawings_Reference_Notes.md` (full notes on the
