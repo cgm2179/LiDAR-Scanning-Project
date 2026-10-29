@@ -12,7 +12,7 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
 |---|---|---|
 | P0 | Plan, read PiDAR + STL-27L manual, Python/Open3D setup, order parts | Mostly done (see below) |
 | P1 | Build the rig; one-button scan → E57 | Not started — waiting on parts |
-| P2 | Calibration + acceptance tests | Not started |
+| P2 | Calibration + acceptance tests | Test code written and checked on synthetic data; needs real scans |
 | P3 | Capture the house (~19–25 stations) | Not started |
 | P4 | Point cloud → geometry JSON (core of the project) | Not started |
 | P5 | Geometry JSON → EnergyPlus | Not started |
@@ -43,6 +43,26 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
 
 - **2026-10-29:** switched to a pull-request workflow: all changes go on a
   branch and into `main` by PR (AGENTS.md §1a).
+- **2026-10-29:** P2 calibration code (branch `feature/calibration-tests`):
+  - `calibration/acceptance.py`: the brief's six tests (range bias, plane
+    flatness, straightness, repeatability, registration, room accuracy), each
+    returning value, pass line and residuals.
+  - `calibration/report.py`: Markdown calibration report.
+  - `phases/phase2_calibration/`: Phase 2 home: README (pass lines, open
+    decisions), `procedure.md` test-day checklist, `session_template.yaml`,
+    `sessions/` and `reports/`.
+  - `scripts/run_calibration.py` + `session_template.yaml`:
+    fill in scan paths, crop boxes and Disto/tape readings, get the report.
+  - Shared pieces: `geometry/planes.py` (plane fit, RANSAC trim, crop box,
+    wall separation), `fileio/pointcloud.py` (PLY/PCD/E57/NPY),
+    `registration/pairwise.py` (PiDAR-style RANSAC + ICP).
+  - `tests/test_calibration.py`: 15 pytest checks that plant known flaws in
+    synthetic walls (bias, scale error, noise, bow, clutter) and confirm each
+    test measures them. A full synthetic session recovered a 6 mm bow as
+    6.5 mm and a 12 mm length error as 12.1 mm.
+  - Open choices, defaults in code, all `TBD (Cameron)`: range correction
+    model (`offset` vs `linear`), straightness bin size (100 mm), flatness trim
+    threshold (off), the pass lines themselves (brief values).
 
 ## Next steps
 
@@ -79,7 +99,10 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
 5. Pick a fixture scan and expected floor area so `tests/test_regression.py`
    can stop being skipped.
 6. Start the calibration room plan for P2 (which room, taped dimensions, Disto
-   availability — the BOM currently has no Disto).
+   availability — the BOM currently has no Disto). When the rig scans, copy
+   `phases/phase2_calibration/session_template.yaml` into `sessions/`, fill it
+   in, and run `python scripts/run_calibration.py <session.yaml>`
+   (checklist: `phases/phase2_calibration/procedure.md`).
 
 ## Open questions (from 2026-10-15 meeting)
 

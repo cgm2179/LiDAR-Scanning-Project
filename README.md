@@ -18,6 +18,8 @@ src/lidar_scanning/
   validation/    P6  scan vs tape survey, energy-impact comparison
   thermal/       extension, deferred
   fileio/        shared readers/writers
+phases/          one folder per phase: guide, procedures, sessions, reports
+  phase2_calibration/
 tests/           regression test (floor area within 2%)
 scripts/         check_environment.py and command-line tools
 config/          pipeline settings (copy the .example file)

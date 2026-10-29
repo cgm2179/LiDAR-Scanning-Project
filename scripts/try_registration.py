@@ -11,26 +11,17 @@ so accuracy is checked by loop closure: 2->0 registered directly should match
 """
 
 import argparse
-import time
 from pathlib import Path
 
 import numpy as np
 import open3d as o3d
 
-SAMPLE_DIR = Path(__file__).resolve().parents[1] / "data" / "sample"
-reg = o3d.pipelines.registration
+from lidar_scanning.registration.pairwise import register_pair
 
+SAMPLE_DIR = Path(__file__).resolve().parents[1] / "data" / "sample"
 # Brief P2 "Registration" pass line
 PASS_FITNESS = 0.8
 PASS_RMSE_MM = 20
-
-
-def preprocess(pcd, voxel):
-    down = pcd.voxel_down_sample(voxel)
-    down.estimate_normals(o3d.geometry.KDTreeSearchParamHybrid(radius=voxel * 2, max_nn=30))
-    down.orient_normals_towards_camera_location((0, 0, 0))
-    fpfh = reg.compute_fpfh_feature(down, o3d.geometry.KDTreeSearchParamHybrid(radius=voxel * 5, max_nn=100))
-    return down, fpfh
 
 
 def pose_error(T_est, T_ref):
@@ -38,24 +29,6 @@ def pose_error(T_est, T_ref):
     dT = np.linalg.inv(T_ref) @ T_est
     angle = np.degrees(np.arccos(np.clip((np.trace(dT[:3, :3]) - 1) / 2, -1, 1)))
     return angle, np.linalg.norm(T_est[:3, 3] - T_ref[:3, 3]) * 1000
-
-
-def register_pair(source, target, voxel, icp_threshold):
-    src_down, src_fpfh = preprocess(source, voxel)
-    tgt_down, tgt_fpfh = preprocess(target, voxel)
-
-    t0 = time.time()
-    dist = voxel * 1.5
-    ransac = reg.registration_ransac_based_on_feature_matching(
-        src_down, tgt_down, src_fpfh, tgt_fpfh, True, dist,
-        reg.TransformationEstimationPointToPoint(False), 4,
-        [reg.CorrespondenceCheckerBasedOnEdgeLength(0.9), reg.CorrespondenceCheckerBasedOnDistance(dist)],
-        reg.RANSACConvergenceCriteria(1_000_000, 0.9))
-    t1 = time.time()
-    icp = reg.registration_icp(source, target, icp_threshold, ransac.transformation,
-                               reg.TransformationEstimationPointToPlane())
-    t2 = time.time()
-    return ransac, icp, t1 - t0, t2 - t1
 
 
 def save_merged(clouds, transforms, out_path):
@@ -103,11 +76,11 @@ if __name__ == "__main__":
     T = {}
     for src, tgt in ((1, 0), (2, 1), (2, 0)):
         source, target = clouds[src], clouds[tgt]
-        ransac, icp, t_ransac, t_icp = register_pair(source, target, args.voxel, icp_threshold)
+        ransac, icp, seconds = register_pair(source, target, args.voxel, icp_threshold)
         rmse_mm = icp.inlier_rmse * 1000
         ok = icp.fitness > PASS_FITNESS and rmse_mm < PASS_RMSE_MM
         print(f"{src}->{tgt:<3d} {ransac.fitness:10.3f} {icp.fitness:8.3f} {rmse_mm:7.1f}mm "
-              f"{t_ransac + t_icp:5.1f}s  {'yes' if ok else 'no'}")
+              f"{seconds:5.1f}s  {'yes' if ok else 'no'}")
         T[(src, tgt)] = icp.transformation
 
     rot, trans = pose_error(T[(1, 0)] @ T[(2, 1)], T[(2, 0)])
