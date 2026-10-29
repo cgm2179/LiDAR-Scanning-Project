@@ -11,6 +11,7 @@ entry of dimensions. Independent study, Columbia BERL.
 src/lidar_scanning/
   rig/           P1  Raspberry Pi scanner (STL-27L lidar, stepper, camera)
   calibration/   P2  acceptance tests
+  capture/       P3  PiDAR LiDAR planes + panorama -> station cloud
   registration/  P3  multi-station alignment, E57
   geometry/      P4  planes -> walls, rooms, openings
   schema/        P4  building geometry JSON
@@ -20,6 +21,7 @@ src/lidar_scanning/
   fileio/        shared readers/writers
 phases/          one folder per phase: guide, procedures, sessions, reports
   phase2_calibration/
+  phase3_capture/
 tests/           regression test (floor area within 2%)
 scripts/         check_environment.py and command-line tools
 config/          pipeline settings (copy the .example file)

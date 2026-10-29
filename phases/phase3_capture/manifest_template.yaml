@@ -1,0 +1,37 @@
+# P3 capture manifest. Copy to phases/phase3_capture/captures/<capture id>.yaml,
+# fill in on site, then run:
+#   python scripts/stitch_capture.py phases/phase3_capture/captures/<capture id>.yaml
+#
+# Each station folder holds what PiDAR writes on the Pi:
+#   <root>/<folder>/planes/plane_<angle>.npy   LiDAR (or the plane files directly in the folder)
+#   <root>/<folder>/pano.jpg                   Hugin panorama (optional; colours the points)
+
+capture:
+  id: null                  # e.g. 2026-11-20_house
+  date: null                # YYYY-MM-DD
+  root: ../../../data/raw/capture/2026-11-20   # station folders, relative to this file
+  reference_station: EXT01  # its frame becomes the registered frame
+
+stations:
+  - id: EXT01
+    folder: EXT01
+    room: exterior north
+    storey: ext             # ext, 0 basement, 1, 2, 3 attic
+    exterior: true
+    neighbours: [EXT02]     # stations it overlaps with; each pair gets registered
+    # Field sketch: rough position and the heading of stepper angle 0, in your
+    # building axes. Strongly recommended: without it, global registration can
+    # fail silently in plain or repeated rooms (see README).
+    approx_pose: {x_m: null, y_m: null, z_m: null, heading_deg: null}
+    disto: {wall_1_m: null, wall_2_m: null, floor_ceiling_m: null}
+    notes: ""
+
+  - id: S01
+    folder: S01
+    room: null
+    storey: 1
+    exterior: false
+    neighbours: [S02]
+    approx_pose: {x_m: null, y_m: null, z_m: null, heading_deg: null}
+    disto: {wall_1_m: null, wall_2_m: null, floor_ceiling_m: null}
+    notes: ""

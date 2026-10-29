@@ -1,0 +1,27 @@
+# Rig calibration for assembling PiDAR captures. Copy to config/rig.yaml and
+# fill in from P2. Every value here is the default (PiDAR's own assembly).
+# Units: metres and degrees. Station frame: origin on the rotation axis at
+# LiDAR height, z up the axis, x/y set by stepper angle 0.
+
+# LiDAR optical centre from the rotation axis, in the LiDAR-plane frame before
+# rotation: x along the spinning plane, y across it, z up. PiDAR's example used
+# about -0.037 m in y. Measure yours (brief: calibrated, not assumed).
+lidar_offset_m: [0.0, 0.0, 0.0]
+
+# Stepper: PiDAR rotates each plane by -angle. angle_scale = achieved / commanded
+# angle, from checking the gear reduction in P2.
+rotation_sign: -1
+angle_scale: 1.0
+angle_offset_deg: 0.0
+
+# Range correction from the P2 range-bias test: true = range_scale * measured + range_offset_m
+range_scale: 1.0
+range_offset_m: 0.0
+min_range_m: 0.05
+max_range_m: 25.0
+min_intensity: 0.0
+
+# Panorama: PiDAR's z_rotate (heading of the pano relative to stepper angle 0)
+# and the camera nodal point in the station frame.
+pano_yaw_deg: 0.0
+camera_offset_m: [0.0, 0.0, 0.0]

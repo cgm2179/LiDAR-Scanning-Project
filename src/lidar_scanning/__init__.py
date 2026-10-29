@@ -4,6 +4,7 @@ Subpackages follow the project phases:
 
     rig/           P1  Raspberry Pi scanning station (runs on the Pi)
     calibration/   P2  acceptance tests and rig calibration
+    capture/       P3  PiDAR planes + panorama -> one 3D cloud per station
     registration/  P3  multi-station alignment, E57 export
     geometry/      P4  point cloud -> walls, rooms, openings
     schema/        P4  building geometry JSON schema

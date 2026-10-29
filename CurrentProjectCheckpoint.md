@@ -13,7 +13,7 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
 | P0 | Plan, read PiDAR + STL-27L manual, Python/Open3D setup, order parts | Mostly done (see below) |
 | P1 | Build the rig; one-button scan → E57 | Not started — waiting on parts |
 | P2 | Calibration + acceptance tests | Test code written and checked on synthetic data; needs real scans |
-| P3 | Capture the house (~19–25 stations) | Not started |
+| P3 | Capture the house (~19–25 stations) | Capture + stitching code written, checked on synthetic captures; needs rig |
 | P4 | Point cloud → geometry JSON (core of the project) | Not started |
 | P5 | Geometry JSON → EnergyPlus | Not started |
 | P6 | Validation + write-up | Not started |
@@ -63,6 +63,23 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
   - Open choices, defaults in code, all `TBD (Cameron)`: range correction
     model (`offset` vs `linear`), straightness bin size (100 mm), flatness trim
     threshold (off), the pass lines themselves (brief values).
+- **2026-10-29:** language decision (Cameron): stay in Python; C++ only for
+  the Pi's LiDAR serial reader if a packet-loss test shows it's needed.
+- **2026-10-29:** P3 capture + stitching code (branch `feature/p3-capture-stitching`):
+  - `capture/`: rig calibration (`config/rig.example.yaml`), station assembly
+    from PiDAR's exact output (`plane_<angle>.npy|csv` + Hugin `pano`),
+    manifest, floor-to-ceiling check, and a simulator that writes synthetic
+    captures in PiDAR's format.
+  - `registration/multistation.py`: pairwise registration (ICP from field
+    sketch poses, or global) + pose-graph optimisation + failure warnings.
+  - Scripts: `assemble_station.py`, `stitch_capture.py` (→ registered E57 +
+    report), `simulate_capture.py`. Phase folder `phases/phase3_capture/`.
+  - Synthetic results: with sketch poses (~0.2 m / 5° error) three stations
+    came back within 0.1 mm / 0.003°. **Without** sketch poses global
+    registration failed in a plain room (station 3 m off, fitness still 0.60);
+    warnings now flag this. Sketch poses look necessary: `TBD (Cameron)`.
+  - Reviewed two pasted snippets (camera-overlay demo, C++ STL-27L driver);
+    neither used; the driver's problems are listed under Open questions.
 
 ## Next steps
 
@@ -103,6 +120,13 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
    `phases/phase2_calibration/session_template.yaml` into `sessions/`, fill it
    in, and run `python scripts/run_calibration.py <session.yaml>`
    (checklist: `phases/phase2_calibration/procedure.md`).
+
+## Open questions
+
+- Pi LiDAR reader: measure packet loss with PiDAR's byte-by-byte reader at
+  921600 baud once the rig runs. A pasted C++ driver (2026-10-29) is not usable
+  as is: 2° per-point angle step instead of interpolating to the end angle, no
+  CRC check, packets split across reads are dropped, serial port not in raw mode.
 
 ## Open questions (from 2026-10-15 meeting)
 

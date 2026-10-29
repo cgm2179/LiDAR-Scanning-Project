@@ -54,7 +54,8 @@ The pipeline and validation are the intellectual core.
 |---|---|---|
 | `src/lidar_scanning/rig/` | P1 build the rig | Raspberry Pi |
 | `src/lidar_scanning/calibration/` | P2 acceptance tests | laptop |
-| `src/lidar_scanning/registration/` | P3 capture + stitching | laptop (Pi for quick checks) |
+| `src/lidar_scanning/capture/` | P3 station assembly from PiDAR files | laptop or Pi |
+| `src/lidar_scanning/registration/` | P3 stitching | laptop |
 | `src/lidar_scanning/geometry/` | P4 point cloud → geometry | laptop |
 | `src/lidar_scanning/schema/` | P4 JSON schema | laptop |
 | `src/lidar_scanning/energyplus/` | P5 schema → EnergyPlus | laptop |
