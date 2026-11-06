@@ -199,9 +199,10 @@ def encode_packet(start_deg, end_deg, distance_mm, intensity, speed_dps=3600, ti
 
 class STL27LReader:
     """Chunked serial reader. `port` is a device path, or any object with
-    read(n) and reset_input_buffer() (a pyserial Serial, or a fake for tests)."""
+    read(n) and reset_input_buffer() (a pyserial Serial, or a fake for tests).
+    The default is the Pi 5's UART0 on GPIO14/15 (needs dtparam=uart0=on)."""
 
-    def __init__(self, port="/dev/ttyS0", baudrate=STL27L_BAUD, chunk_size=4096, timeout_s=0.2, max_empty_reads=25):
+    def __init__(self, port="/dev/ttyAMA0", baudrate=STL27L_BAUD, chunk_size=4096, timeout_s=0.2, max_empty_reads=25):
         if isinstance(port, str):
             import serial  # pyserial puts the port in raw mode (no echo, no XON/XOFF, no CR/LF changes)
 

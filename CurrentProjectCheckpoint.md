@@ -133,7 +133,9 @@ Items marked `TBD (Cameron)` are decisions or facts only Cameron can supply.
 ## Open questions
 
 - Pi LiDAR reader: run `python scripts/lidar_packet_test.py --seconds 20` and
-  again with `--bytewise` (PiDAR's way) on the Pi. If the chunked reader keeps
+  again with `--bytewise` (PiDAR's way) on the Pi. The default port is now
+  `/dev/ttyAMA0` (Pi 5 UART0, GPIO14/15); add `dtparam=uart0=on` to
+  `/boot/firmware/config.txt` first. If the chunked reader keeps
   up (no dropped packets, ~21,600 points/s), no C++ is needed. A pasted C++
   driver (2026-10-29) was not used: 2° per-point angle step instead of
   interpolating to the end angle, no CRC check, packets split across reads are

@@ -2,8 +2,11 @@
 
 Run on the Pi with the LiDAR spinning and the rig still:
 
-    python scripts/lidar_packet_test.py --port /dev/ttyS0 --seconds 20
-    python scripts/lidar_packet_test.py --port /dev/ttyS0 --seconds 20 --bytewise   # PiDAR's way
+    python scripts/lidar_packet_test.py --seconds 20
+    python scripts/lidar_packet_test.py --seconds 20 --bytewise   # PiDAR's way
+
+The LiDAR TX goes to GPIO15 (header pin 10). On a Pi 5 that is UART0, which needs
+`dtparam=uart0=on` in /boot/firmware/config.txt and appears as /dev/ttyAMA0.
 
 Default mode reads in 4 KB chunks (this repo's reader). --bytewise reads one
 byte per call like PiDAR's driver. Both decode with the same parser, so the
@@ -18,7 +21,7 @@ from lidar_scanning.rig.stl27l import LD06_BAUD, STL27L_BAUD, PacketParser, Pack
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--port", default="/dev/ttyS0")
+    parser.add_argument("--port", default="/dev/ttyAMA0", help="Pi 5 UART0 on GPIO14/15")
     parser.add_argument("--seconds", type=float, default=20)
     parser.add_argument("--ld06", action="store_true", help="LD06 at 230400 baud instead of STL-27L")
     parser.add_argument("--bytewise", action="store_true", help="read one byte per call, like PiDAR")
